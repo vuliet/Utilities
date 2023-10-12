@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Net.Mail;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Utilities
@@ -229,6 +230,21 @@ namespace Utilities
             Interlocked.Increment(ref _currentId);
             return _currentId;
         }
+
+        #region CheckSum
+        public static bool IsValidDataUseHmacSHA256(object data, string currentSignature, string checksumKey)
+        {
+            var sortData = SortUtils.SortObjDataByAlphabet(data);
+            var stringifyData = string.Join("&", sortData.Select(kv => $"{kv.Key}={kv.Value}"));
+
+            using HMACSHA256 hmac = new HMACSHA256(Encoding.UTF8.GetBytes(checksumKey));
+            byte[] hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(stringifyData));
+            string hash = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+
+            return hash == currentSignature;
+        }
+
+        #endregion
     }
 
     public static class StringUtils
@@ -342,6 +358,20 @@ namespace Utilities
             using var stream = assembly.GetManifestResourceStream(resourceName);
             using var reader = new StreamReader(stream);
             return reader.ReadToEndAsync();
+        }
+    }
+
+    public static class SortUtils
+    {
+        public static SortedDictionary<string, object> SortObjDataByAlphabet(object obj)
+        {
+            var properties = obj.GetType().GetProperties();
+            var sortedObject = new SortedDictionary<string, object>();
+
+            foreach (var property in properties)
+                sortedObject[property.Name] = property.GetValue(obj) ?? "";
+
+            return sortedObject;
         }
     }
 }
