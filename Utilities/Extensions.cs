@@ -32,13 +32,44 @@ namespace Utilities
                 _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
             };
 
-        public static bool CheckIsNumber(this string strNumber)
+        public static bool IsNumber(this string strNumber)
         {
             if (string.IsNullOrEmpty(strNumber))
                 return false;
 
             string strExp = "[0-9]{" + strNumber.Length + "}";
             return Regex.IsMatch(strNumber, strExp);
+        }
+
+        public static bool IsGuid(this string inputString)
+        {
+            try
+            {
+                var guid = new Guid(inputString);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static bool IsBase64(this string base64String)
+        {
+            if (base64String == null || base64String.Length == 0 || base64String.Length % 4 != 0
+               || base64String.Contains(" ") || base64String.Contains("\t") || base64String.Contains("\r") || base64String.Contains("\n"))
+                return false;
+
+            try
+            {
+                Convert.FromBase64String(base64String);
+                return true;
+            }
+            catch (Exception)
+            {
+                // Handle the exception
+            }
+            return false;
         }
 
         public static List<string> GetConstants(this Type type)
@@ -67,6 +98,14 @@ namespace Utilities
                 ? string.Join(delimiter, list)
                 : string.Empty;
         }
+
+        public static string ReplaceLineBreaks(this string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                return string.Empty;
+
+            return Regex.Replace(content, @"\r\n?|\n", "<br />");
+        }
     }
 
     public static class DecimalExtensions
@@ -89,7 +128,7 @@ namespace Utilities
 
                 return value.ToString($"F{precision}");
             }
-            catch (Exception)
+            catch (AppException)
             {
                 return value.ToString("F8");
             }
@@ -109,7 +148,7 @@ namespace Utilities
 
                 return Math.Truncate(value * scale) / scale;
             }
-            catch (Exception)
+            catch (AppException)
             {
                 return value;
             }
