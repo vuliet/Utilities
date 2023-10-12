@@ -1,6 +1,6 @@
-﻿namespace Utilities
+﻿namespace Utilities.Constants
 {
-    public class Constants
+    public class ConstantHelpers
     {
         public const int KeyEncodeSize = 256;
 
