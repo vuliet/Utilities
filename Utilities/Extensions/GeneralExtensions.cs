@@ -103,5 +103,10 @@ namespace Utilities
 
             return Regex.Replace(content, @"\r\n?|\n", "<br />");
         }
+
+        public static bool EqualsIgnoreCase(this string s, string o)
+        {
+            return string.Equals(s, o, StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

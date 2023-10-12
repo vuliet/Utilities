@@ -2,7 +2,7 @@
 {
     public static class ConvertExtensions
     {
-        public static List<int> ConvertStringToListInt(string strIds)
+        public static List<int> ConvertStringToListInt(this string strIds)
         {
             if (string.IsNullOrEmpty(strIds))
                 return new List<int>();
@@ -17,6 +17,11 @@
             }
 
             return lstResult;
+        }
+
+        public static Guid ToGuid(this string id)
+        {
+            return Guid.Parse(id);
         }
     }
 }

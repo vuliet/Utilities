@@ -2,7 +2,7 @@
 
 namespace Utilities.Utilities
 {
-    public class PayCompareUtils : IComparer<string>
+    public class CompareUtils : IComparer<string>
     {
         public int Compare(string x, string y)
         {
