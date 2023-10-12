@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
+using Utilities.Constants;
 
 namespace Utilities.Extensions
 {
@@ -14,7 +15,7 @@ namespace Utilities.Extensions
             text = text.Replace(" ", "").ToLower();
             text = text.Replace("đ", "d").ToLower();
 
-            var special = Constants.SpecialCharacters;
+            var special = ConstantHelpers.SpecialCharacters;
 
             text = special.Aggregate(text, (current, sp) => current.Replace(sp, ""));
             text = text.Normalize(NormalizationForm.FormD);
@@ -40,7 +41,7 @@ namespace Utilities.Extensions
             text = text.Replace(" ", "-").ToLower();
             text = text.Replace("đ", "d").ToLower();
 
-            var special = Constants.SpecialCharacters;
+            var special = ConstantHelpers.SpecialCharacters;
 
             text = special.Aggregate(text, (current, sp) => current.Replace(sp, ""));
             text = text.Normalize(NormalizationForm.FormD);
