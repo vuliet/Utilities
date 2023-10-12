@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Net.Mail;
+using System.Reflection;
 using System.Text;
 
 namespace Utilities
@@ -324,6 +325,23 @@ namespace Utilities
                 .ToList();
 
             return props.Contains(value);
+        }
+    }
+
+    public static class ReadFileUtils
+    {
+        public static Task<string> ReadFileFromAssemblyAsync(string projectName, string pathName, Type type)
+        {
+            var assembly = Assembly.GetAssembly(type);
+
+            if (assembly is null)
+                return Task.FromResult(string.Empty);
+
+            var resourceName = $"{projectName}.{pathName}";
+
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            using var reader = new StreamReader(stream);
+            return reader.ReadToEndAsync();
         }
     }
 }
